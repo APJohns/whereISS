@@ -10,7 +10,9 @@ async function fetchAsync(url) {
 }
 
 async function getISSPos(map) {
-	let issPos = await fetchAsync("http://api.open-notify.org/iss-now.json");
+	let issPos = await fetchAsync(
+		"https://cors-anywhere.herokuapp.com/http://api.open-notify.org/iss-now.json"
+	);
 	let lat = issPos.iss_position.latitude;
 	let lon = issPos.iss_position.longitude;
 
