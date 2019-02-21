@@ -1,6 +1,6 @@
 // Map Scripts
 
-let circle = undefined;
+let issIcon = undefined;
 let autoPan = true;
 
 async function fetchAsync(url) {
@@ -13,16 +13,14 @@ async function getISSPos(map) {
   let issPos = await fetchAsync("http://api.open-notify.org/iss-now.json");
   let lat = issPos.iss_position.latitude;
   let lon = issPos.iss_position.longitude;
-  console.log(lat, lon);
 
-  if (circle) map.removeLayer(circle);
-  circle = L.circle([lat, lon], {
-    color: "red",
-    fillColor: "#f03",
-    fillOpacity: 0.5,
-    radius: 100000
-  }).addTo(map);
-
+  // Image credit to https://www.iconfinder.com/icons/2981850/astronomy_international_space_space_craft_space_ship_station_icon
+  // https://creativecommons.org/licenses/by/3.0/
+  if (issIcon) map.removeLayer(issIcon);
+  issIcon = L.imageOverlay("iss.png", [
+    [lat + 7, lon + 10],
+    [lat - 7, lon - 10]
+  ]).addTo(map);
   if (autoPan) map.flyTo([lat, lon], 3);
 }
 
