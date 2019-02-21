@@ -107,3 +107,11 @@ addressForm.addEventListener("submit", async e => {
 	mymap.flyTo([location.lat, location.lng], 6);
 	addressForm.reset();
 });
+
+// Bump up address form if browsing on safari mobile to get above action bar
+if (
+	navigator.userAgent.indexOf("iPhone") !== -1 ||
+	navigator.userAgent.indexOf("iPad") !== -1
+) {
+	addressForm.style.bottom = "50px";
+}
