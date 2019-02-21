@@ -69,7 +69,9 @@ async function startMap(map) {
 	]).addTo(map);
 }
 
-let mymap = L.map("map");
+let mymap = L.map("map", {
+	minZoom: 2
+});
 startMap(mymap);
 
 let update = setInterval(() => {
