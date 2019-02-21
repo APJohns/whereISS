@@ -23,11 +23,9 @@ async function fetchAsync(url) {
 }
 
 async function getISSPos(map) {
-	loading(true, load);
 	let issPos = await fetchAsync(
 		"https://cors-anywhere.herokuapp.com/http://api.open-notify.org/iss-now.json"
 	);
-	loading(false, load);
 	return issPos;
 }
 
@@ -47,7 +45,9 @@ async function updateISSPos(map) {
 }
 
 async function startMap(map) {
+	loading(true, load);
 	let issPos = await getISSPos(map);
+	loading(false, load);
 	let lat = issPos.iss_position.latitude;
 	let lon = issPos.iss_position.longitude;
 	map.setView([lat, lon], 3);
@@ -97,7 +97,7 @@ addressForm.addEventListener("submit", async e => {
 	let address = addressField.value;
 	loading(true, submitBtn);
 	let data = await fetchAsync(
-		`http://www.mapquestapi.com/geocoding/v1/address?key=NBFsYD4ZCez8frZzKXwGsmTOwhBw57NJ&location=${address}`
+		`https://cors-anywhere.herokuapp.com/http://www.mapquestapi.com/geocoding/v1/address?key=NBFsYD4ZCez8frZzKXwGsmTOwhBw57NJ&location=${address}`
 	);
 	loading(false, submitBtn, "Get Flyover Time ");
 	let location = data.results[0].locations[0].latLng;
