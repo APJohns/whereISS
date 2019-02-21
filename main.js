@@ -70,9 +70,7 @@ async function startMap(map) {
 }
 
 let mymap = L.map("map", {
-	minZoom: 2,
-	maxBounds: [[-90, -180], [90, 180]],
-	maxBoundsViscosity: 0.6
+	minZoom: 2
 });
 startMap(mymap);
 
