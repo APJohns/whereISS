@@ -4,8 +4,14 @@ body {
   font-size: 18px;
 }
 
+main {
+  position: relative;
+  height: 100vh;
+}
+
 #map {
-  height: 75vh;
+  height: 100%;
+  z-index: 1;
 }
 
 .leaflet-popup-content-wrapper,
@@ -19,4 +25,32 @@ body {
 button,
 input {
   font-size: 1rem;
+  padding: 5px 15px;
+}
+
+#addressForm {
+  width: 40%;
+  min-width: 250px;
+  display: flex;
+}
+
+#addressField {
+  flex: 3;
+}
+
+#addressForm button {
+  flex: 1;
+}
+
+#controls {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 20px 15px;
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: space-between;
+  z-index: 10;
 }
