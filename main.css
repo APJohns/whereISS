@@ -2,6 +2,7 @@ html,
 body {
 	margin: 0;
 	font-size: calc(12px + 0.5vw);
+	font-family: "Cabin", sans-serif;
 }
 
 main {
@@ -31,6 +32,7 @@ input {
 	box-sizing: border-box;
 	border: none;
 	background: none;
+	font-family: "Cabin", sans-serif;
 }
 
 button {
