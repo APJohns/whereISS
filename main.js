@@ -1,4 +1,17 @@
+function loading(isLoading, parent, content = "") {
+	if (isLoading) {
+		let loader = document.createElement("div");
+		loader.classList.add("loader");
+		parent.textContent = "";
+		parent.appendChild(loader);
+	} else {
+		parent.textContent = content;
+	}
+}
+
 // Map Scripts
+
+const load = document.getElementById("load");
 
 let issIcon = undefined;
 let autoPan = true;
@@ -10,9 +23,16 @@ async function fetchAsync(url) {
 }
 
 async function getISSPos(map) {
+	loading(true, load);
 	let issPos = await fetchAsync(
 		"https://cors-anywhere.herokuapp.com/http://api.open-notify.org/iss-now.json"
 	);
+	loading(false, load);
+	return issPos;
+}
+
+async function updateISSPos(map) {
+	let issPos = await getISSPos(map);
 	let lat = issPos.iss_position.latitude;
 	let lon = issPos.iss_position.longitude;
 
@@ -27,9 +47,7 @@ async function getISSPos(map) {
 }
 
 async function startMap(map) {
-	let issPos = await fetchAsync(
-		"https://cors-anywhere.herokuapp.com/http://api.open-notify.org/iss-now.json"
-	);
+	let issPos = await getISSPos(map);
 	let lat = issPos.iss_position.latitude;
 	let lon = issPos.iss_position.longitude;
 	map.setView([lat, lon], 3);
@@ -45,14 +63,17 @@ async function startMap(map) {
 				"pk.eyJ1IjoiYXBqb2hucyIsImEiOiJjam01dmZqZjMwMjY4M3FueG03cXBoNzhoIn0.YzyXJ02DA4ER162lEqaeOA"
 		}
 	).addTo(map);
-	getISSPos(map);
+	issIcon = L.imageOverlay("iss.png", [
+		[lat + 7, lon + 10],
+		[lat - 7, lon - 10]
+	]).addTo(map);
 }
 
 let mymap = L.map("map");
 startMap(mymap);
 
 let update = setInterval(() => {
-	getISSPos(mymap);
+	updateISSPos(mymap);
 }, 10000);
 
 mymap.on("mousedown", () => {
@@ -60,18 +81,6 @@ mymap.on("mousedown", () => {
 });
 
 // Interface Scripts
-
-const submitBtn = document.getElementById("submit");
-function loading(isLoading) {
-	if (isLoading) {
-		let loader = document.createElement("div");
-		loader.classList.add("loader");
-		submitBtn.textContent = "";
-		submitBtn.appendChild(loader);
-	} else {
-		submitBtn.textContent = "Get Flyover Time";
-	}
-}
 
 const follow = document.getElementById("follow");
 follow.addEventListener("click", e => {
@@ -81,15 +90,16 @@ follow.addEventListener("click", e => {
 
 const addressForm = document.getElementById("addressForm");
 const addressField = document.getElementById("addressField");
+const submitBtn = document.getElementById("submit");
 addressForm.addEventListener("submit", async e => {
 	e.preventDefault();
 	autoPan = false;
 	let address = addressField.value;
-	loading(true);
+	loading(true, submitBtn);
 	let data = await fetchAsync(
 		`http://www.mapquestapi.com/geocoding/v1/address?key=NBFsYD4ZCez8frZzKXwGsmTOwhBw57NJ&location=${address}`
 	);
-	loading(false);
+	loading(false, submitBtn, "Get Flyover Time ");
 	let location = data.results[0].locations[0].latLng;
 	let marker = L.marker([location.lat, location.lng]).addTo(mymap);
 
