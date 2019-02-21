@@ -89,4 +89,5 @@ addressForm.addEventListener("submit", async e => {
     )
     .openPopup();
   mymap.flyTo([location.lat, location.lng], 6);
+  addressForm.reset();
 });
