@@ -1,56 +1,94 @@
 html,
 body {
-  margin: 0;
-  font-size: 18px;
+	margin: 0;
+	font-size: calc(12px + 0.5vw);
 }
 
 main {
-  position: relative;
-  height: 100vh;
+	position: relative;
+	height: 100vh;
 }
 
 #map {
-  height: 100%;
-  z-index: 1;
+	height: 100%;
+	z-index: 1;
 }
 
 .leaflet-popup-content-wrapper,
 .leaflet-popup-tip {
-  font-size: 1rem;
-  color: white;
-  background-color: rgba(0, 0, 0, 0.6);
-  box-shadow: 0px 0px 60px rgba(10, 10, 20, 0.6);
+	font-size: 1rem;
+	color: white;
+	background-color: rgba(0, 0, 0, 0.6);
+	box-shadow: 0px 0px 60px rgba(10, 10, 20, 0.6);
 }
 
 button,
 input {
-  font-size: 1rem;
-  padding: 5px 15px;
+	font-size: 1rem;
+	padding: 6px 15px;
+	transition: 0.1s all ease;
+	margin: 0;
+	box-sizing: border-box;
+	border: none;
+	background: none;
+}
+
+button {
+	background: rgba(39, 174, 96, 0.8);
+	color: #ecf0f1;
+	cursor: pointer;
+}
+
+button:hover {
+	background: rgba(39, 174, 96, 1);
+	transition: 0.1s all ease;
+}
+
+input {
+	background: rgba(236, 240, 241, 0.8);
+}
+
+input:focus {
+	background: rgba(236, 240, 241, 1);
+	transition: 0.1s all ease;
 }
 
 #addressForm {
-  width: 40%;
-  min-width: 250px;
-  display: flex;
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	max-width: 900px;
+	padding: 20px 15px;
+	box-sizing: border-box;
+	display: flex;
+	justify-content: space-between;
+	border-radius: 5px;
+	z-index: 10;
 }
 
 #addressField {
-  flex: 3;
+	flex: 3;
+	border-radius: 2px 0 0 2px;
 }
 
 #addressForm button {
-  flex: 1;
+	flex: 1;
+	border-radius: 0 2px 2px 0;
 }
 
-#controls {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  padding: 20px 15px;
-  box-sizing: border-box;
-  display: flex;
-  flex-wrap: wrap;
-  align-content: center;
-  justify-content: space-between;
-  z-index: 10;
+#follow {
+	position: absolute;
+	top: 15px;
+	right: 15px;
+	box-sizing: border-box;
+	border-radius: 2px;
+	z-index: 10;
 }
+
+/*
+@media only screen and (max-width: 850px) {
+	#addressForm {
+		width: 100%;
+	}
+}
+*/
