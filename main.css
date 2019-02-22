@@ -75,6 +75,7 @@ input:focus {
 	box-sizing: border-box;
 	display: flex;
 	justify-content: space-between;
+	align-items: flex-end;
 	border-radius: 5px;
 	z-index: 10;
 }
@@ -117,10 +118,23 @@ input:focus {
 	margin: 10px 0;
 }
 
+#locate {
+	cursor: pointer;
+	width: 1.35rem;
+	margin: 0 5px;
+}
+
 #load {
 	position: absolute;
 	width: 100%;
 	top: calc(50vh - 100px);
+}
+
+#status {
+	position: absolute;
+	width: 50%;
+	color: white;
+	display: inline-block;
 }
 
 #load .loader {

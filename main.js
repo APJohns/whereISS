@@ -109,6 +109,22 @@ follow.addEventListener("click", e => {
 	mymap.flyTo([issLat, issLon], 3);
 });
 
+async function getFlyover(lat, lon) {
+	let marker = L.marker([lat, lon]).addTo(mymap);
+
+	// Get flyover time
+	let flyover = await fetchAsync(
+		`https://cors-anywhere.herokuapp.com/http://api.open-notify.org/iss-pass.json?lat=${lat}&lon=${lon}`
+	);
+	let flyoverTimes = flyover.response;
+	marker
+		.bindPopup(
+			`<h2>Next Flyover</h2><p>${new Date(flyoverTimes[0].risetime * 1000)}</p>`
+		)
+		.openPopup();
+	mymap.flyTo([lat, lon], 6);
+}
+
 const addressForm = document.getElementById("addressForm");
 const addressField = document.getElementById("addressField");
 const submitBtn = document.getElementById("submit");
@@ -124,22 +140,33 @@ addressForm.addEventListener("submit", async e => {
 	);
 	loading(false, submitBtn, "Get Flyover Time ");
 	let location = data.results[0].locations[0].latLng;
-	let marker = L.marker([location.lat, location.lng]).addTo(mymap);
-
-	// Get flyover time
-	let flyover = await fetchAsync(
-		`https://cors-anywhere.herokuapp.com/http://api.open-notify.org/iss-pass.json?lat=${
-			location.lat
-		}&lon=${location.lng}`
-	);
-	let flyoverTimes = flyover.response;
-	marker
-		.bindPopup(
-			`<h2>Next Flyover</h2><p>${new Date(flyoverTimes[0].risetime * 1000)}</p>`
-		)
-		.openPopup();
-	mymap.flyTo([location.lat, location.lng], 6);
+	getFlyover(location.lat, location.lng);
 	addressForm.reset();
+});
+
+// Geolocation
+
+const status = document.getElementById("status");
+
+function success(position) {
+	const latitude = position.coords.latitude;
+	const longitude = position.coords.longitude;
+	status.textContent = "";
+	autoPan = false;
+	getFlyover(latitude, longitude);
+}
+
+document.getElementById("locate").addEventListener("click", () => {
+	if (!navigator.geolocation) {
+		console.error("Geolocation is not supported by your browser");
+		status.textContent = "Geolocation is not supported by your browser";
+	} else {
+		status.textContent = "Locating…";
+		navigator.geolocation.getCurrentPosition(success, () => {
+			console.error("Unable to retrieve your location");
+			status.textContent = "Unable to retrieve your location";
+		});
+	}
 });
 
 // Bump up address form if browsing on safari mobile to get above action bar
