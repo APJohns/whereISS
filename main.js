@@ -13,6 +13,9 @@ function loading(isLoading, parent, content = "") {
 
 const load = document.getElementById("load");
 
+let issLat = 0;
+let issLon = 0;
+
 let issIcon = undefined;
 let autoPan = true;
 
@@ -31,26 +34,26 @@ async function getISSPos(map) {
 
 async function updateISSPos(map) {
 	let issPos = await getISSPos(map);
-	let lat = issPos.iss_position.latitude;
-	let lon = issPos.iss_position.longitude;
+	issLat = issPos.iss_position.latitude;
+	issLon = issPos.iss_position.longitude;
 
 	// Image credit to https://www.iconfinder.com/icons/2981850/astronomy_international_space_space_craft_space_ship_station_icon
 	// https://creativecommons.org/licenses/by/3.0/
 	if (issIcon) map.removeLayer(issIcon);
 	issIcon = L.imageOverlay("iss.png", [
-		[lat + 7, lon + 10],
-		[lat - 7, lon - 10]
+		[issLat + 7, issLon + 10],
+		[issLat - 7, issLon - 10]
 	]).addTo(map);
-	if (autoPan) map.flyTo([lat, lon], 3);
+	if (autoPan) map.flyTo([issLat, issLon], 3);
 }
 
 async function startMap(map) {
 	loading(true, load);
 	let issPos = await getISSPos(map);
 	loading(false, load);
-	let lat = issPos.iss_position.latitude;
-	let lon = issPos.iss_position.longitude;
-	map.setView([lat, lon], 3);
+	issLat = issPos.iss_position.latitude;
+	issLon = issPos.iss_position.longitude;
+	map.setView([issLat, issLon], 3);
 
 	L.tileLayer(
 		"https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}",
@@ -64,8 +67,8 @@ async function startMap(map) {
 		}
 	).addTo(map);
 	issIcon = L.imageOverlay("iss.png", [
-		[lat + 7, lon + 10],
-		[lat - 7, lon - 10]
+		[issLat + 7, issLon + 10],
+		[issLat - 7, issLon - 10]
 	]).addTo(map);
 }
 
@@ -87,7 +90,7 @@ mymap.on("mousedown", () => {
 const follow = document.getElementById("follow");
 follow.addEventListener("click", e => {
 	autoPan = true;
-	getISSPos(mymap);
+	mymap.flyTo([issLat, issLon], 3);
 });
 
 const addressForm = document.getElementById("addressForm");
@@ -96,6 +99,8 @@ const submitBtn = document.getElementById("submit");
 addressForm.addEventListener("submit", async e => {
 	e.preventDefault();
 	autoPan = false;
+
+	// Get data and from form and geolocate it
 	let address = addressField.value;
 	loading(true, submitBtn);
 	let data = await fetchAsync(
@@ -105,6 +110,7 @@ addressForm.addEventListener("submit", async e => {
 	let location = data.results[0].locations[0].latLng;
 	let marker = L.marker([location.lat, location.lng]).addTo(mymap);
 
+	// Get flyover time
 	let flyover = await fetchAsync(
 		`https://cors-anywhere.herokuapp.com/http://api.open-notify.org/iss-pass.json?lat=${
 			location.lat
