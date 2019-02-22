@@ -9,7 +9,7 @@ function loading(isLoading, parent, content = "") {
 	}
 }
 
-// Map Scripts
+// Map and ISS Scripts
 
 const load = document.getElementById("load");
 
@@ -84,6 +84,22 @@ let update = setInterval(() => {
 mymap.on("mousedown", () => {
 	autoPan = false;
 });
+
+// People in space
+
+const peopleList = document.getElementById("people");
+async function getPeople() {
+	const people = await fetchAsync(
+		"https://cors-anywhere.herokuapp.com/http://api.open-notify.org/astros.json"
+	);
+	people.people.forEach(person => {
+		const li = document.createElement("li");
+		li.textContent = `${person.name} - ${person.craft}`;
+		peopleList.appendChild(li);
+	});
+}
+
+getPeople();
 
 // Interface Scripts
 
